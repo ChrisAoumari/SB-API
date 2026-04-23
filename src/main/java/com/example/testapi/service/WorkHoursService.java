@@ -39,7 +39,14 @@ public class WorkHoursService {
     }
 
     public void createWorkHours(WorkHoursDto workHoursDto){
-        workHoursRepository.save(workHoursMapper.toEntity(workHoursDto));
+        WorkHours workHours = workHoursMapper.toEntity(workHoursDto);
+
+        Employee employee = employeeRepository.findById(workHoursDto.getEmployeeId())
+                .orElseThrow();
+
+        workHours.setEmployee(employee);
+
+        workHoursRepository.save(workHours);
     }
 
     public void deleteWorkHours(Long id){

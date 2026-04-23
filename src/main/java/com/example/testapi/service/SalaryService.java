@@ -2,9 +2,7 @@ package com.example.testapi.service;
 
 import com.example.testapi.Mapper.SalaryMapper;
 import com.example.testapi.models.entity.Employee;
-import com.example.testapi.models.entity.Phones;
 import com.example.testapi.models.entity.Salary;
-import com.example.testapi.models.pojo.PhonesDto;
 import com.example.testapi.models.pojo.SalaryDto;
 import com.example.testapi.repo.EmployeeRepository;
 import com.example.testapi.repo.SalaryRepository;
@@ -41,7 +39,15 @@ public class SalaryService {
     }
 
     public void createSalary(SalaryDto salaryDto) {
-        salaryRepository.save(salaryMapper.toEntity(salaryDto));
+
+        Salary salary = salaryMapper.toEntity(salaryDto);
+
+        Employee employee = employeeRepository.findById(salaryDto.getEmployeeId())
+                .orElseThrow();
+
+        salary.setEmployee(employee);
+
+        salaryRepository.save(salary);
     }
 
     public void deleteSalary(Long id) {

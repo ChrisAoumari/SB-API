@@ -39,7 +39,14 @@ public class WorkLeaveService {
     }
 
     public void createWorkLeave(WorkLeaveDto workLeaveDto){
-        workLeaveRepository.save(workLeaveMapper.toEntity(workLeaveDto));
+        WorkLeave workLeave = workLeaveMapper.toEntity(workLeaveDto);
+
+        Employee employee = employeeRepository.findById(workLeaveDto.getEmployeeId())
+                .orElseThrow();
+
+        workLeave.setEmployee(employee);
+
+        workLeaveRepository.save(workLeave);
     }
 
     public void updateWorkLeave(Long id, WorkLeaveDto updatedDto){

@@ -1,7 +1,6 @@
 package com.example.testapi.service;
 
 import com.example.testapi.Mapper.EmploymentMapper;
-import com.example.testapi.Mapper.EmploymentMapper_old;
 import com.example.testapi.models.entity.Employee;
 import com.example.testapi.models.entity.Employment;
 import com.example.testapi.models.pojo.EmploymentDto;
@@ -41,7 +40,15 @@ public class EmploymentService {
     }
 
     public void createEmployment(EmploymentDto employmentDto){
-        employmentRepository.save(employmentMapper.toEntity(employmentDto));
+        Employment employment = employmentMapper.toEntity(employmentDto);
+
+        Employee managedEmployee = employeeRepository
+                .findById(employmentDto.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        employment.setEmployee(managedEmployee);
+
+        employmentRepository.save(employment);
     }
 
     public void deleteEmployment(Long id){
